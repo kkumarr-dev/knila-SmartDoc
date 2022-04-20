@@ -1,0 +1,100 @@
+﻿@model SmartDoc.Models.CreateAppoinmentViewModel
+
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Register</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-offset-2 col-sm-12">
+                    <form class="form-horizontal" data-toggle="validate" role="form">
+                        <div class="form-group">
+                            <label>Select Doctor</label>
+                            <select name="DoctorId" class="form-control" data-live-search="true">
+                                @foreach (var item in Model.DoctorList)
+                                {
+                                    <option value="@item.Value">@item.Text</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>AppoinmentTime</label>
+                            <div class="date-picker"></div>
+                            <input type="hidden" name="AppoinmentDate" id="AppoinmentDate"/>
+                            <div class="row" id="time-pair">
+                                <div class="col-5">
+                                    <input type="text" name="FromDateTime" class="time start" />
+                                </div>
+                                <div class="col-2">to</div>
+                                <div class="col-5">
+                                    <input type="text" name="ToDateTime" class="time end" />
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="SaveData()">Make an Appointmant</button>
+    </div>
+</div>
+<style>
+    .table-condensed {
+        width: 100% !important;
+    }
+
+    .datepicker-inline {
+        width: 100% !important;
+    }
+
+    #time-pair .time {
+        width: 100%;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $('#time-pair .time').timepicker({
+            'showDuration': true,
+            'timeFormat': 'g:ia',
+            'minTime': '8:00am',
+            'maxTime': '9:00pm',
+        });
+        $('#time-pair').datepair();
+    })
+    $('.date-picker').on('changeDate', function () {
+        $('#AppoinmentDate').val(
+            $('.date-picker').datepicker('getFormattedDate')
+        );
+    });
+    function SaveData() {
+        showLoader()
+        var formdata = $("form").serializeArray();
+        var data = {};
+        $(formdata).each(function (index, obj) {
+            data[obj.name] = obj.value;
+        });
+
+        $.ajax({
+            url: '/Appoinment/PerformAppoinment/',
+            type: 'POST',
+            data: data,
+            dataType: "json",
+            success: function (data) {
+                hideLoader()
+                $(`#webAppPatial`).modal('hide');
+                window.location.reload();
+            },
+            error: function (request, error) {
+                hideLoader()
+                window.location.reload();
+            }
+        });
+    }
+</script>

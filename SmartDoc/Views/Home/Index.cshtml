@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    var RoleId = 0;
+    if (User.Identity.IsAuthenticated)
+    {
+        RoleId = RoleId = Convert.ToInt32(User.FindFirst("RoleId").Value);
+    }
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    @if (User.Identity.IsAuthenticated)
+    {
+        if (RoleId==2)
+        {
+            <h1>Admin</h1>
+        }
+        if (RoleId==3)
+        {
+            <h1>Patient</h1>
+        }
+    }
+</div>

@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SmartDoc.Entities\SmartDoc.Entities.csproj" />
+    <ProjectReference Include="..\SmartDoc.Helper\SmartDoc.Helper.csproj" />
+    <ProjectReference Include="..\SmartDoc.Models\SmartDoc.Models.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,32 @@
+﻿
+<div class="container">
+    <div class="row" id="data-container">
+    </div>
+    <div class="row" id="admin-container">
+        <div class="col-sm-12 col-xs-12 col-md-4">
+            <div class="card" onclick="bindpartial('/Admin/GetUsers?roleid=2', '#data-container','#admin-container')">
+                <img class="card-img" src="https://st.depositphotos.com/55910684/53623/v/600/depositphotos_536237342-stock-illustration-doctor-steth-vector-illustration.jpg" width="300" height="200" alt="Bologna">
+                <div class="card-img-overlay text-white d-flex flex-column justify-content-center">
+                    <h4 class="card-title">Doctors</h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-xs-12 col-md-4">
+            <div class="card" onclick="bindpartial('/Admin/GetUsers?roleid=3', '#data-container','#admin-container')">
+                <img class="card-img" src="https://static.vecteezy.com/system/resources/thumbnails/002/737/789/small_2x/medical-doctor-visiting-patient-illustration-concept-free-vector.jpg" width="300" height="200" alt="Bologna">
+                <div class="card-img-overlay text-white d-flex flex-column justify-content-center">
+                    <h4 class="card-title">Patients</h4>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-xs-12 col-md-4">
+            <div class="card" onclick="bindpartial('/Appoinment/AllAppoinments', '#data-container','#admin-container')">
+                <img class="card-img" src="https://t3.ftcdn.net/jpg/02/60/79/68/360_F_260796882_QyjDubhDDk0RZXV9z7XBEw9AKnWCizXy.jpg" width="300" height="200" alt="Bologna">
+                <div class="card-img-overlay text-white d-flex flex-column justify-content-center">
+                    <h4 class="card-title">All Appointments</h4>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

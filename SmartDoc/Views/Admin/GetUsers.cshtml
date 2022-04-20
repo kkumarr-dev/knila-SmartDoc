@@ -1,0 +1,46 @@
+﻿@model List<SmartDoc.Models.UserViewModel>
+@using Microsoft.AspNetCore.Http;
+@inject IHttpContextAccessor HttpContextAccessor
+@{
+    var roleid = HttpContextAccessor.HttpContext.Session.GetInt32("roleid");
+}
+<div class="container">
+    <div class="row">
+        <div class="col-12 pb-2">
+            <button class="btn btn-outline-secondary" onclick="backBotton('#data-container', '#admin-container')">BACK</button>
+            <button class="btn btn-outline-secondary" onclick="bindsidepartial('/Admin/CreateUser?roleid=@(roleid)', 400)">ADD</button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <table class="table table-striped table-bordered" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Date Of Birth</th>
+                        <th>Email</th>
+                        <th>Phone Number</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.FirstName</td>
+                            <td>@item.LastName</td>
+                            <td>@item.DateOfBirth</td>
+                            <td>@item.Email</td>
+                            <td>@item.PhoneNumber</td>
+                            <td>
+                                <a href="#" onclick="bindsidepartial('@Url.Action("GetUserById","Admin",new {userId = item.UserId })', 400)">Edit</a>/
+                                <a href="#" onclick="bindsidepartial('@Url.Action("DeleteUserById","Admin",new {user =item})', 400)">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,143 @@
+﻿@model SmartDoc.Models.CreateUserViewModel
+
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">CREATE USER</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-12">
+                    <form class="form-horizontal" data-toggle="validate" role="form" method="post">
+                        <div class="form-group">
+                            <label>First Name</label>
+                            <input type="text" name="FirstName" value="@Model.FirstName" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label>Last Name</label>
+                            <input type="text" name="LastName" value="@Model.LastName" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label>Date Of Birth</label>
+                            <input type="text" name="DateOfBirth" value="@Model.DateOfBirth.ToString("yyyy-MM-dd")" class="form-control date-picker" />
+                        </div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input type="text" name="PhoneNumber" value="@Model.PhoneNumber" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" name="Email" value="@Model.Email" class="form-control" />
+                        </div>
+                        @*<div class="form-group">
+                                <label>Password</label>
+                                <input type="password" name="Password" id="pass" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label></label>
+                                <input type="password" name="ConfirmPassword" id="conpass" class="form-control" />
+                            </div>*@
+                        <div class="form-group">
+                            <label></label>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+        @*<button type="submit" class="btn btn-primary" onclick="SaveData()">Login</button>*@
+    </div>
+</div>
+<style>
+    .error {
+        color: #e74c3c;
+    }
+</style>
+<script>
+    var $form = $("form");
+    $.validator.addMethod("letters", function (value, element) {
+        return this.optional(element) || value == value.match(/^[a-zA-Z\s]*$/);
+    });
+    $.validator.addMethod(
+        'mobileValidation',
+        function (value, element) {
+            return this.optional(element) || /^(\+91-|\+91|0)?\d{10}$/.test(value);
+    }, "Please enter a valid phone number");
+
+    $form.validate({
+        rules: {
+            FirstName: {
+                required: true,
+                minlength: 3,
+                letters: true
+            },
+            LastName: {
+                required: true,
+                minlength: 3,
+                letters: true
+            },
+            DateOfBirth: {
+                required: true,
+            },
+            PhoneNumber: {
+                required: true,
+                mobileValidation: true,
+                //phoneUS: true,
+            },
+            Email: {
+                required: true,
+                email: true
+            },
+            //Password: {
+            //    required: true,
+            //    minlength: 8
+            //},
+            //ConfirmPassword: {
+            //    required: true,
+            //    minlength: 8,
+            //    equalTo: "#pass"
+            //}
+        },
+        messages: {
+            FirstName: "Please specify your name (only letters and spaces are allowed)",
+            LastName: "Please specify your name (only letters and spaces are allowed)",
+            PhoneNumber: "Please specify a valid Mobile Number",
+            Email: "Please specify a valid email address",
+        },
+        submitHandler: function () {
+            showLoader()
+            var formdata = $("form").serializeArray();
+            var data = {
+                RoleId:@Model.RoleId,
+                UserId:@Model.UserId
+            };
+            $(formdata).each(function (index, obj) {
+                data[obj.name] = obj.value;
+            });
+
+            $.ajax({
+                url: '/Admin/AddUser',
+                type: 'POST',
+                data: data,
+                dataType: "json",
+                success: function (data) {
+                    hideLoader()
+                    if (data) {
+                        bindpartial('/Admin/GetUsers?roleid=@Model.RoleId', '#data-container', '#admin-container')
+                        $(`#webAppPatial`).modal('hide');
+                    }
+                },
+                error: function (request, error) {
+                    window.location.reload();
+                    hideLoader();
+                }
+            });
+        }
+    });
+</script>

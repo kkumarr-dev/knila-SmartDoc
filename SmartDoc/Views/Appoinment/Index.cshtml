@@ -1,0 +1,40 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    var RoleId = 0;
+    if (User.Identity.IsAuthenticated)
+    {
+        RoleId = RoleId = Convert.ToInt32(User.FindFirst("RoleId").Value);
+    }
+}
+@if (User.Identity.IsAuthenticated)
+{
+
+    <div class="text-center">
+        <h2 class="display-4">
+            Welcome, <span class="font-weight-bold">@User.FindFirst("UserName").Value</span>
+        </h2>
+        <div id="appointments">
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            debugger;
+            showLoader();
+            $.ajax({
+                url: '/Appoinment/Appoinments',
+                type: 'GET',
+                success: function (data) {
+                    hideLoader();
+                    $(`#appointments`).html(data);
+                    $('table').DataTable();
+                    $('select').selectpicker();
+                    $('.datepicker').datepicker();
+                    $('.timepicker').timepicker({ 'timeFormat': 'h:i A' });
+                },
+                error: function (request, error) {
+                    hideLoader();
+                }
+            });
+        })
+    </script>
+}

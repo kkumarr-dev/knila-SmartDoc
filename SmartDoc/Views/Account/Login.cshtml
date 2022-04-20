@@ -1,0 +1,60 @@
+﻿@model SmartDoc.Models.LoginViewModel
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-xs-12 col-md-4"></div>
+        <div class="col-sm-12 col-xs-12 col-md-4">
+            <div class="card login-form">
+                <div class="card-body">
+                    <h3 class="card-title text-center">Log in</h3>
+                    <div class="card-text">
+                        <div class="form">
+                            <div class="form-group">
+                                <label asp-for="Email"></label>
+                                <input asp-for="Email" class="form-control" />
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Password"></label>
+                                <input asp-for="Password" class="form-control" />
+                            </div>
+                            <button class="btn btn-primary btn-block" onclick="SaveData()">Sign in</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-xs-12 col-md-4"></div>
+    </div>
+</div>
+<script>
+    function SaveData() {
+        showLoader()
+        debugger;
+
+        var formdata = $(".form-control").serializeArray();
+        var data = {};
+        $(formdata).each(function (index, obj) {
+            data[obj.name] = obj.value;
+        });
+
+        $.ajax({
+            url: '/Account/Login',
+            type: 'POST',
+            data: data,
+            dataType: "json",
+            success: function (data) {
+                debugger;
+                hideLoader()
+                $(`#webAppPatial`).modal('hide');
+                //showtoaster('Success');
+                window.location.href = data.url;
+            },
+            error: function (request, error) {
+                debugger;
+                hideLoader()
+                window.location.reload();
+                //showtoaster('Error');
+            }
+        });
+    }
+</script>

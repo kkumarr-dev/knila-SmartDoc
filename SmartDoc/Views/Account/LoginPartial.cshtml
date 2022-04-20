@@ -1,0 +1,70 @@
+﻿@model SmartDoc.Models.LoginViewModel
+
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">LOGIN</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-offset-2 col-sm-12">
+                    <form class="form-horizontal" data-toggle="validate" role="form">
+                        <div asp-validation-summary="All" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="Email"></label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label asp-for="Password"></label>
+                            <input asp-for="Password" class="form-control" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary" onclick="SaveData()">Login</button>
+
+    </div>
+</div>
+
+<script>
+    function SaveData() {
+        showLoader()
+        debugger;
+
+        var formdata = $("form").serializeArray();
+        var data = {};
+        $(formdata).each(function (index, obj) {
+            data[obj.name] = obj.value;
+        });
+
+        $.ajax({
+            url: '/Account/Login',
+            type: 'POST',
+            data: data,
+            dataType: "json",
+            success: function (data) {
+                debugger;
+                hideLoader()
+                $(`#webAppPatial`).modal('hide');
+                //showtoaster('Success');
+                window.location.href = data.url;
+            },
+            error: function (request, error) {
+                debugger;
+                hideLoader()
+                window.location.reload();
+                //showtoaster('Error');
+            }
+        });
+    }
+</script>
