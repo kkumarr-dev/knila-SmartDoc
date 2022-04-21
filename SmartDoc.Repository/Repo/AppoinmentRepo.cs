@@ -120,5 +120,16 @@ namespace SmartDoc.Repository
             };
             return data;
         }
+        public async Task<object> GetFilledTimings(DateTime date,int doctorId)
+        {
+            var allAppointments = await GetAllAppoinments();
+            var timings = allAppointments.Where(x => x.DoctorId == doctorId && x.AppoinmentDate.Date == date.Date)
+                .Select(x => new
+                {
+                    from = x.FromDateTime.ToString("hh:mm tt"),
+                    to = x.ToDateTime.ToString("hh:mm tt")
+                }).ToList();
+            return timings;
+        }
     }
 }

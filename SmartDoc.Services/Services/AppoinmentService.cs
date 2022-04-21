@@ -43,5 +43,9 @@ namespace SmartDoc.Services
         {
             return await _appoinmentRepo.CreateAppoinment();
         }
+        public async Task<object> GetFilledTimings(DateTime date, int doctorId)
+        {
+            return await _appoinmentRepo.GetFilledTimings(date,doctorId);
+        }
     }
 }

@@ -15,5 +15,6 @@ namespace SmartDoc.Repository
         Task<List<AppoinmentViewModel>> GetAppoinmentByDoctorId(int doctorId);
         Task<AppoinmentViewModel> GetAppoinmentById(int appointId);
         Task<CreateAppoinmentViewModel> CreateAppoinment();
+        Task<object> GetFilledTimings(DateTime date, int doctorId);
     }
 }

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace SmartDoc.Repository
 {
-    public class AccountRepo:IAccountRepo
+    public class AccountRepo : IAccountRepo
     {
         private readonly AppDBContext _dbContext;
         private readonly ISecurePassword _securePassword;
@@ -25,18 +25,21 @@ namespace SmartDoc.Repository
         }
         public async Task<AccountUserViewModel> GetUserData(LoginViewModel user)
         {
-            if (user!=null)
+            if (user != null)
             {
                 user.Password = _securePassword.Secure(_config.Security.PasswordSalt, user.Password);
-                var checkUser = await _dbContext.Users.Where(x => x.Email == user.Email && x.password == user.Password)
-                    .Select(x=> new AccountUserViewModel { 
-                        Email = x.Email,
-                        UserId = x.UserId,
-                        PhoneNumber = x.PhoneNumber,
-                        RoleId = x.RoleId,
-                        UserName = $"{x.FirstName} {x.LastName}"
-                    })
-                    .FirstOrDefaultAsync();
+                var checkUser = await (from u in _dbContext.Users
+                                       join r in _dbContext.Roles on u.RoleId equals r.RoleId
+                                       where u.Email == user.Email && u.password == user.Password
+                                       select new AccountUserViewModel
+                                       {
+                                           Email = u.Email,
+                                           UserId = u.UserId,
+                                           PhoneNumber = u.PhoneNumber,
+                                           RoleId = u.RoleId,
+                                           UserName = $"{u.FirstName} {u.LastName}",
+                                           RoleName = r.RoleName
+                                       }).FirstOrDefaultAsync();
                 return checkUser;
             }
             else

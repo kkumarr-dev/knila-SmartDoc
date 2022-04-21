@@ -27,17 +27,19 @@ namespace SmartDoc.Controllers
             var res = await _appoinmentService.GetAllAppoinments();
             return PartialView("Appoinments",res);
         }
-
+        [Authorize(Roles = "Doctor,Patient")]
         public async Task<IActionResult> Appoinments()
         {
             var res = await _appoinmentService.GetAppoinments();
             return PartialView(res);
         }
+        [Authorize(Roles = "Doctor,Patient")]
         public async Task<IActionResult> GetAppoinmentById(int appointId)
         {
             var res = await _appoinmentService.GetAppoinmentById(appointId);
             return View();
         }
+        [Authorize(Roles = "Patient")]
         public async Task<IActionResult> CreateAppoinment()
         {
             var res = await _appoinmentService.CreateAppoinment();
@@ -48,6 +50,7 @@ namespace SmartDoc.Controllers
             var res = await _appoinmentService.PerformAppoinment(model);
             return Ok(res);
         }
+        [Authorize(Roles = "Doctor")]
         public async Task<IActionResult> ApproveAppoinment(int appointId)
         {
             var res = false;
@@ -59,6 +62,7 @@ namespace SmartDoc.Controllers
             }
             return RedirectToAction("Index");
         }
+        [Authorize(Roles = "Doctor")]
         public async Task<IActionResult> RejectAppoinment(int appointId)
         {
             var res = false;
@@ -69,6 +73,12 @@ namespace SmartDoc.Controllers
                 res = await _appoinmentService.PerformAppoinment(data);
             }
             return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> GetFilledTimings(DateTime date,int doctorId)
+        {
+            var res = await _appoinmentService.GetFilledTimings(date, doctorId);
+            return Ok(res);
         }
     }
 }

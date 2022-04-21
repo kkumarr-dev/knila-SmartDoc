@@ -14,7 +14,7 @@
                     <form class="form-horizontal" data-toggle="validate" role="form">
                         <div class="form-group">
                             <label>Select Doctor</label>
-                            <select name="DoctorId" class="form-control" data-live-search="true">
+                            <select name="DoctorId" id="doctorId" class="form-control" data-live-search="true">
                                 @foreach (var item in Model.DoctorList)
                                 {
                                     <option value="@item.Value">@item.Text</option>
@@ -25,7 +25,7 @@
                             <label>AppoinmentTime</label>
                             <div class="date-picker"></div>
                             <input type="hidden" name="AppoinmentDate" id="AppoinmentDate"/>
-                            <div class="row" id="time-pair">
+                            <div class="row" id="time-pair" style="display:none">
                                 <div class="col-5">
                                     <input type="text" name="FromDateTime" class="time start" />
                                 </div>
@@ -65,13 +65,43 @@
             'timeFormat': 'g:ia',
             'minTime': '8:00am',
             'maxTime': '9:00pm',
+            'disableTimeRanges': []
         });
         $('#time-pair').datepair();
     })
     $('.date-picker').on('changeDate', function () {
+        showLoader()
         $('#AppoinmentDate').val(
             $('.date-picker').datepicker('getFormattedDate')
         );
+        $.ajax({
+            url: '/Appoinment/GetFilledTimings/',
+            type: 'GET',
+            data: { date: $('.date-picker').datepicker('getFormattedDate'), doctorId: $('#doctorId').val()},
+            dataType: "json",
+            success: function (data) {
+                hideLoader()
+                debugger;
+                var disableTimeRanges = [];
+                $(data).each(function (i,o) {
+                    var newarr = [o.from, o.to];
+                    disableTimeRanges.push(newarr);
+                })
+                $('#time-pair .time').timepicker({
+                    'showDuration': true,
+                    'timeFormat': 'g:ia',
+                    'minTime': '8:00am',
+                    'maxTime': '9:00pm',
+                    'disableTimeRanges': disableTimeRanges
+                });
+                $('#time-pair').datepair();
+                $('#time-pair').show();
+
+            },
+            error: function (request, error) {
+                hideLoader()
+            }
+        });
     });
     function SaveData() {
         showLoader()
@@ -80,6 +110,11 @@
         $(formdata).each(function (index, obj) {
             data[obj.name] = obj.value;
         });
+        if ($('#AppoinmentDate').val() == '') {
+            hideLoader();
+            alert('Please Choose valid date and try again');
+            return false;
+        }
 
         $.ajax({
             url: '/Appoinment/PerformAppoinment/',

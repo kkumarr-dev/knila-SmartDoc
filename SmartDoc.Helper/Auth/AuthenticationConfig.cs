@@ -26,7 +26,8 @@ namespace SmartDoc.Helper.Auth
                     new Claim("RoleId", user.RoleId+""),
                     new Claim("Email", user.Email+""),
                     new Claim("PhoneNumber", user.PhoneNumber+""),
-                    new Claim("UserName", user.UserName+"")
+                    new Claim("UserName", user.UserName+""),
+                    new Claim(ClaimTypes.Role,user.RoleName)
                 };
             
             var claimsIdentity = new ClaimsIdentity(

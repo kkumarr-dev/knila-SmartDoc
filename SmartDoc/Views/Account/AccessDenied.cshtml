@@ -1,0 +1,48 @@
+﻿<section class="forbidden">
+    <h3>403</h3>
+    <p>You do not have permission to view this directory.</p>
+    <span id='r'>Returning to home page: <i>-</i></span>
+</section>
+<style>
+    .forbidden {
+        font-size: 50pt;
+        padding: 10px;
+        background-color: rgb(30, 33, 37);
+        font-family: monospace;
+        text-align: center;
+        color: #ccc;
+    }
+
+        .forbidden p,span {
+            margin: 0;
+            padding: 0;
+            font-size: 15px;
+            font-style: italic;
+            font-weight: 300;
+            line-height: 25px;
+            color: #666666;
+        }
+
+        .forbidden span {
+            font-size: 10pt;
+            color: white;
+        }
+
+        .forbidden h3 {
+            font-size: 35px;
+            margin: 0;
+            padding: 0;
+        }
+</style>
+<script>
+    $(document).ready(function () {
+        var i = 6;
+        setInterval(function () {
+            i--;
+            if (i < 1) {
+                window.location.href = '' + window.location.origin;
+            }
+            $("#r i").text(i);
+        }, 1000);
+    });
+</script>

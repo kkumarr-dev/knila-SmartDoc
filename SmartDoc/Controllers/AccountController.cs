@@ -72,5 +72,9 @@ namespace SmartDoc.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("login", "Account");
         }
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
     }
 }
