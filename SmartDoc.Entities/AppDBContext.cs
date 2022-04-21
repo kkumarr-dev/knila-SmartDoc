@@ -19,7 +19,7 @@ namespace SmartDoc.Entities
         public AppDBContext(DbContextOptions options, IHttpContextAccessor httpContextAccessor, ISecurePassword securePassword, AppSettingsConfig config)
             : base(options)
         {
-            if (httpContextAccessor.HttpContext.User.Claims.Any())
+            if (httpContextAccessor.HttpContext != null && httpContextAccessor.HttpContext.User.Claims.Any())
             {
                 UserId = Convert.ToInt32(httpContextAccessor.HttpContext.User?.Claims?.FirstOrDefault(claim => claim.Type == "UserId")?.Value);
                 RoleId = Convert.ToInt32(httpContextAccessor.HttpContext.User?.Claims?.FirstOrDefault(claim => claim.Type == "RoleId")?.Value);
@@ -34,6 +34,19 @@ namespace SmartDoc.Entities
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDBContext).Assembly);
+
+            var entityTypes = modelBuilder.Model
+                .GetEntityTypes()
+                .ToList();
+            var foreignKeys = entityTypes
+            .SelectMany(e => e.GetForeignKeys().Where(f => f.DeleteBehavior == DeleteBehavior.Cascade));
+            foreach (var foreignKey in foreignKeys)
+            {
+                foreignKey.DeleteBehavior = DeleteBehavior.Restrict;
+            }
+
             modelBuilder.Entity<Users>()
             .HasIndex(p => new { p.Email })
             .IsUnique(true);

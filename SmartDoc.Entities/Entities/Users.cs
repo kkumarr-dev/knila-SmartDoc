@@ -7,7 +7,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace SmartDoc.Entities
 {
     [Table("TblUsers")]
-    [Index(nameof(Users.Email), IsUnique = true)]
     public class Users
     {
         [Key]
